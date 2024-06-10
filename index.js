@@ -2,9 +2,9 @@ import express from 'express';
 import mongoose from 'mongoose';
 import { loginValidationUsers, registerValidationUsers } from './validations/auth.js';
 import multer from 'multer';
-import { getMe, loginUser, registerUser } from './controllers/UserController.js'
+import { getMe, loginAdmin, loginUser, registerAdmin, registerUser } from './controllers/UserController.js'
 import checkAuth from './utils/checkAuth.js';
-import { addProducts, productsChanged, productsDelet } from './controllers/ProductsController.js';
+import { addProducts, categoriesSize, productCard, productsChanged, productsDelet } from './controllers/ProductsController.js';
 
 mongoose.connect('mongodb+srv://samandarsaidahmadov98:8787172ss@cluster0.soqylcu.mongodb.net/megaShops').then(() => {
     console.log('DB ok');
@@ -33,7 +33,6 @@ app.get('/', (req, res) => {
 })
 
 
-
 app.post('/products', checkAuth, upload.single('image'), addProducts)
 
 app.post('/auth/register', registerValidationUsers, registerUser)
@@ -44,8 +43,16 @@ app.get('/auth/me', checkAuth, getMe);
 
 app.delete('/products/:id', checkAuth, productsDelet)
 
-
 app.put('/products/:id', checkAuth, upload.single('image'), productsChanged);
+
+app.post('/products/cart', productCard)
+
+app.get('/products', categoriesSize)
+
+app.post('/auth/adminregister', registerValidationUsers, registerAdmin)
+
+app.post('/auth/adminlogin', loginValidationUsers, loginAdmin)
+
 
 
 
